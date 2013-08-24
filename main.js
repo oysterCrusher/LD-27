@@ -22,7 +22,7 @@ window.onload = function () {
     }
 
     function play() {
-//        ten.State.start();
+        ten.State.start();
     }
 
     loadSprites();
