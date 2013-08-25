@@ -9,25 +9,25 @@ ten.map = function() {
         queue = [],
         endStep = 0,
         isPlaying = false,
-        stepLength = 500,
+        stepLength = 1000,
         currentStep,
         currentTime,
         nextActionTime,
         nextEnemyActionTime,
         enemies = [],
         arrows = [],
-        e = 0;
+        arrow;
 
     var player = {
         x: 2,
-        y: 14,
+        y: 3,
         h: 30,
         w: 30,
         hp: 3,
         xCell: 2,
-        yCell: 14,
+        yCell: 3,
         lastXCell: 2,
-        lastYCell: 14
+        lastYCell: 3
     };
 
     function init() {
@@ -37,7 +37,7 @@ ten.map = function() {
         exitTileSprite = [tileSpriteMap, 60, 0, 30, 30];
         tileSprites = [floorTileSprite, wallTileSprite, exitTileSprite];
         loadMap(0);
-        var enemy = new ten.Enemy(2, 11, 3);
+        var enemy = new ten.Enemy(2, 6, 3);
         enemies.push(enemy);
         enemy = new ten.Enemy(13,10,1);
         enemies.push(enemy);
@@ -62,6 +62,11 @@ ten.map = function() {
         for (var e = 0; e < enemies.length; e++) {
             drawObject(enemies[e]);
         }
+
+        // Arrows
+        for (e = 0; e < arrows.length; e++) {
+            drawObject(arrows[e]);
+        }
     }
 
     function drawTile(tileSprite, x, y) {
@@ -85,8 +90,8 @@ ten.map = function() {
                                    obj.sprite[4],
                                    obj.x * ten.settings.tileSize - 5,
                                    obj.y * ten.settings.tileSize - 5,
-                                   obj.w,
-                                   obj.h
+                                   obj.sprite[3],
+                                   obj.sprite[4]
         );
     }
 
@@ -117,7 +122,8 @@ ten.map = function() {
         var i,
             e,
             xTarget,
-            yTarget;
+            yTarget,
+            hit;
         if (currentStep < endStep) {
             player.lastXCell = player.xCell;
             player.lastYCell = player.yCell;
@@ -169,12 +175,14 @@ ten.map = function() {
                     }
                 }
             }
+            hit = false;
             if (queue[currentStep] === 5) { // Shoot up
                 for (i = player.yCell - 1; i >= 0; i--) {
                     // Hit a wall?
                     if (tiles[i][player.xCell] === 1) {
                         xTarget = player.xCell;
                         yTarget = i;
+                        break;
                     }
                     // Hit and enemy?
                     for (e = 0; e < enemies.length; e++) {
@@ -182,12 +190,22 @@ ten.map = function() {
                             xTarget = player.xCell;
                             yTarget = i;
                             enemies[e].hitWithArrow();
+                            hit = true;
+                            break;
                         }
+                    }
+                    if (hit) {
+                        break;
                     }
                 }
                 // Fire the arrow!
-//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
-//                arrows.push(arrow);
+                arrow = new ten.Arrow(player.xCell,
+                                      player.yCell,
+                                      xTarget,
+                                      yTarget,
+                                      1,
+                                      nextEnemyActionTime);
+                arrows.push(arrow);
             }
             if (queue[currentStep] === 6) { // Shoot down
                 for (i = player.yCell + 1; i < 16; i++) {
@@ -195,6 +213,7 @@ ten.map = function() {
                     if (tiles[i][player.xCell] === 1) {
                         xTarget = player.xCell;
                         yTarget = i;
+                        break;
                     }
                     // Hit an enemy?
                     for (e = 0; e < enemies.length; e++) {
@@ -202,12 +221,22 @@ ten.map = function() {
                             xTarget = player.xCell;
                             yTarget = i;
                             enemies[e].hitWithArrow();
+                            hit = true;
+                            break;
                         }
+                    }
+                    if (hit) {
+                        break;
                     }
                 }
                 // Fire the arrow!
-//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
-//                arrows.push(arrow);
+                arrow = new ten.Arrow(player.xCell,
+                                      player.yCell,
+                                      xTarget,
+                                      yTarget,
+                                      2,
+                                      nextEnemyActionTime);
+                arrows.push(arrow);
             }
             if (queue[currentStep] === 7) { // Shoot left
                 for (i = player.xCell - 1; i >= 0; i--) {
@@ -215,6 +244,7 @@ ten.map = function() {
                     if (tiles[player.yCell][i] === 1) {
                         xTarget = i;
                         yTarget = player.yCell;
+                        break;
                     }
                     // Hit an enemy?
                     for (e = 0; e < enemies.length; e++) {
@@ -222,12 +252,22 @@ ten.map = function() {
                             xTarget = i;
                             yTarget = player.yCell;
                             enemies[e].hitWithArrow();
+                            hit = true;
+                            break;
                         }
+                    }
+                    if (hit) {
+                        break;
                     }
                 }
                 // Fire the arrow!
-//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
-//                arrows.push(arrow);
+                arrow = new ten.Arrow(player.xCell,
+                                      player.yCell,
+                                      xTarget,
+                                      yTarget,
+                                      3,
+                                      nextEnemyActionTime);
+                arrows.push(arrow);
             }
             if (queue[currentStep] === 8) { // Shoot right
                 for (i = player.xCell + 1; i < 26; i++) {
@@ -235,6 +275,7 @@ ten.map = function() {
                     if (tiles[player.yCell][i] === 1) {
                         xTarget = i;
                         yTarget = player.yCell;
+                        break;
                     }
                     // Hit an enemy?
                     for (e = 0; e < enemies.length; e++) {
@@ -242,12 +283,22 @@ ten.map = function() {
                             xTarget = i;
                             yTarget = player.yCell;
                             enemies[e].hitWithArrow();
+                            hit = true;
+                            break;
                         }
+                    }
+                    if (hit) {
+                        break;
                     }
                 }
                 // Fire the arrow!
-//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
-//                arrows.push(arrow);
+                arrow = new ten.Arrow(player.xCell,
+                                      player.yCell,
+                                      xTarget,
+                                      yTarget,
+                                      4,
+                                      nextEnemyActionTime);
+                arrows.push(arrow);
             }
             currentStep++;
             if (tiles[player.yCell][player.xCell] === 2) {
@@ -266,7 +317,6 @@ ten.map = function() {
             enemies[e].lastXCell = enemies[e].xCell;
             enemies[e].lastYCell = enemies[e].yCell;
             // Check health
-            console.log(enemies[e].hp);
             if (enemies[e].hp <= 0) {
                 enemies.splice(e,1);
                 e--;
@@ -343,12 +393,14 @@ ten.map = function() {
         if (isPlaying) {
             currentTime = (new Date).getTime();
             if (currentTime >= nextActionTime) {
-                playerStep();
                 nextEnemyActionTime = currentTime + (stepLength / 2);
                 nextActionTime = currentTime + stepLength;
+                playerStep();
             } else if (currentTime >= nextEnemyActionTime) {
                 enemyStep();
             }
+
+            // Update player position
             player.x = player.xCell
                 + (player.xCell - player.lastXCell) * (currentTime - nextActionTime) / stepLength;
             player.y = player.yCell
@@ -356,14 +408,23 @@ ten.map = function() {
             ten.State.game.commandPanel.timerOverlay.w = (currentStep) * 30
                 + (currentTime - nextActionTime) / stepLength * 30;
 
+            // Update enemy positions
             for (var e = 0; e < enemies.length; e++) {
                 enemies[e].x = enemies[e].xCell
                     + (enemies[e].xCell - enemies[e].lastXCell)
                     * (currentTime - nextEnemyActionTime) / stepLength;
-
                 enemies[e].y = enemies[e].yCell
                     + (enemies[e].yCell - enemies[e].lastYCell)
                     * (currentTime - nextEnemyActionTime) / stepLength;
+            }
+
+            // Update arrows
+            for (var i = 0; i < arrows.length; i++) {
+                arrows[i].update(currentTime);
+                if (arrows[i].finished) {
+                    arrows.splice(i,1);
+                    i--;
+                }
             }
         }
     }
