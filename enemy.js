@@ -9,7 +9,12 @@ ten.Enemy = function(x0, y0, d0) {
         yCell = y0,
         lastXCell = x0,
         lastYCell = y0,
-        dir = d0;
+        dir = d0,
+        hp = 1;
+
+    function hitWithArrow() {
+        this.hp--;
+    }
 
     return {
         sprite: sprite,
@@ -21,7 +26,21 @@ ten.Enemy = function(x0, y0, d0) {
         lastYCell: lastYCell,
         h: h,
         w: w,
-        dir: dir
+        dir: dir,
+        hp: hp,
+        hitWithArrow: hitWithArrow
     }
+
+};
+
+
+ten.Arrow = function(x0, y0, x1, y1, d) {
+
+    var x = x0,
+        y = y0,
+        xTarget = x1,
+        yTarget = y1,
+        dir = d.
+        sprite = [ten.settings.sprites[2], 0, 60, 30, 30];
 
 };

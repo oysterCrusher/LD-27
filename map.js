@@ -9,12 +9,13 @@ ten.map = function() {
         queue = [],
         endStep = 0,
         isPlaying = false,
-        stepLength = 1000,
+        stepLength = 500,
         currentStep,
         currentTime,
         nextActionTime,
         nextEnemyActionTime,
         enemies = [],
+        arrows = [],
         e = 0;
 
     var player = {
@@ -113,6 +114,10 @@ ten.map = function() {
     }
 
     function playerStep() {
+        var i,
+            e,
+            xTarget,
+            yTarget;
         if (currentStep < endStep) {
             player.lastXCell = player.xCell;
             player.lastYCell = player.yCell;
@@ -165,7 +170,84 @@ ten.map = function() {
                 }
             }
             if (queue[currentStep] === 5) { // Shoot up
-
+                for (i = player.yCell - 1; i >= 0; i--) {
+                    // Hit a wall?
+                    if (tiles[i][player.xCell] === 1) {
+                        xTarget = player.xCell;
+                        yTarget = i;
+                    }
+                    // Hit and enemy?
+                    for (e = 0; e < enemies.length; e++) {
+                        if (enemies[e].xCell === player.xCell && enemies[e].yCell === i) {
+                            xTarget = player.xCell;
+                            yTarget = i;
+                            enemies[e].hitWithArrow();
+                        }
+                    }
+                }
+                // Fire the arrow!
+//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
+//                arrows.push(arrow);
+            }
+            if (queue[currentStep] === 6) { // Shoot down
+                for (i = player.yCell + 1; i < 16; i++) {
+                    // Hit a wall?
+                    if (tiles[i][player.xCell] === 1) {
+                        xTarget = player.xCell;
+                        yTarget = i;
+                    }
+                    // Hit an enemy?
+                    for (e = 0; e < enemies.length; e++) {
+                        if (enemies[e].xCell === player.xCell && enemies[e].yCell === i) {
+                            xTarget = player.xCell;
+                            yTarget = i;
+                            enemies[e].hitWithArrow();
+                        }
+                    }
+                }
+                // Fire the arrow!
+//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
+//                arrows.push(arrow);
+            }
+            if (queue[currentStep] === 7) { // Shoot left
+                for (i = player.xCell - 1; i >= 0; i--) {
+                    // Hit a wall?
+                    if (tiles[player.yCell][i] === 1) {
+                        xTarget = i;
+                        yTarget = player.yCell;
+                    }
+                    // Hit an enemy?
+                    for (e = 0; e < enemies.length; e++) {
+                        if (enemies[e].xCell === i && enemies[e].yCell === player.yCell) {
+                            xTarget = i;
+                            yTarget = player.yCell;
+                            enemies[e].hitWithArrow();
+                        }
+                    }
+                }
+                // Fire the arrow!
+//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
+//                arrows.push(arrow);
+            }
+            if (queue[currentStep] === 8) { // Shoot right
+                for (i = player.xCell + 1; i < 26; i++) {
+                    // Hit a wall?
+                    if (tiles[player.yCell][i] === 1) {
+                        xTarget = i;
+                        yTarget = player.yCell;
+                    }
+                    // Hit an enemy?
+                    for (e = 0; e < enemies.length; e++) {
+                        if (enemies[e].xCell === i && enemies[e].yCell === player.yCell) {
+                            xTarget = i;
+                            yTarget = player.yCell;
+                            enemies[e].hitWithArrow();
+                        }
+                    }
+                }
+                // Fire the arrow!
+//                var arrow = new ten.Arrow(player.xCell, player.yCell, player.xCell, 1, 1);
+//                arrows.push(arrow);
             }
             currentStep++;
             if (tiles[player.yCell][player.xCell] === 2) {
@@ -183,6 +265,13 @@ ten.map = function() {
         for (var e = 0; e < enemies.length; e++) {
             enemies[e].lastXCell = enemies[e].xCell;
             enemies[e].lastYCell = enemies[e].yCell;
+            // Check health
+            console.log(enemies[e].hp);
+            if (enemies[e].hp <= 0) {
+                enemies.splice(e,1);
+                e--;
+                continue;
+            }
             if (enemies[e].dir === 0) { // Stationary
                 // Nothing to do here
             } else if (enemies[e].dir === 1) { // Moving up
