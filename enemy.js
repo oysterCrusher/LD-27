@@ -12,8 +12,13 @@ ten.Bouncer = function(x0, y0, d0) {
     this.dir = d0;
     this.hp = 1;
 
+    this.step = function() {
+
+    };
+
     this.hitWithArrow = function() {
         this.hp--;
+        this.takeArrowHit = false;
     };
 
     this.decideNextMove = function() {
@@ -92,13 +97,24 @@ ten.Seeker = function(x0, y0) {
     this.lastYCell = y0;
     this.xCell = x0;
     this.yCell = y0;
-    this.sprite = [ten.settings.sprites[2], 0, 90, 30 , 30];
+    this.sprite2 = [ten.settings.sprites[2], 0, 90, 30 , 30];
+    this.sprite1 = [ten.settings.sprites[2], 30, 90, 30 , 30];
+    this.sprite = this.sprite2;
     this.hp = 2;
     this.timeBetweenMoves = 1;
     this.moveCooldown = 0;
+    this.takeArrowHit = false;
 
     this.hitWithArrow = function() {
-        this.hp--;
+        this.takeArrowHit = true;
+    };
+
+    this.step = function() {
+        if (this.takeArrowHit) {
+            this.hp--;
+            this.takeArrowHit = false;
+            this.sprite = this.sprite1;
+        }
     };
 
     this.decideNextMove = function() {

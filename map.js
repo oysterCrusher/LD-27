@@ -341,6 +341,7 @@ ten.Map = function() {
                 continue;
             }
             this.enemies[e].decideNextMove();
+            this.enemies[e].step();
         }
         this.nextEnemyActionTime += this.stepLength;
     };
