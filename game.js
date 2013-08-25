@@ -229,7 +229,6 @@
 
         go: function() {
             return function() {
-                console.log("go!");
                 ten.State.game.playing = true;
                 ten.State.game.map.giveQueue(ten.State.game.queue.actions,
                                              ten.State.game.queue.nextAction);
@@ -238,7 +237,6 @@
 
         goToNext: function() {
             return function() {
-                console.log(ten.State.game.currentLevelNo + 1);
                 ten.State.startLevel(ten.State.game.currentLevelNo + 1);
             }
         },
@@ -250,7 +248,9 @@
         },
 
         restartLevel: function() {
-
+            return function() {
+                ten.State.startLevel(ten.State.game.currentLevelNo);
+            }
         },
 
         removeLastFromQueue: function() {
@@ -277,6 +277,13 @@
 
         success: function() {
             this.complete = true;
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem("ten_" + this.currentLevelNo.toString(), "1");
+            }
+        },
+
+        failure: function() {
+            this.failed = true;
         },
 
         loadLevel: function(i) {
@@ -290,6 +297,8 @@
             mY = evt.clientY - evt.target.getBoundingClientRect().top;
             if (ten.State.game.complete) {
                 ten.State.game.menuButtons.buttonsSuccess.mouseClick(mX, mY);
+            } else if (ten.State.game.failed) {
+                ten.State.game.menuButtons.buttonsFailure.mouseClick(mX, mY);
             } else if (!ten.State.game.playing) {
                 ten.State.game.commandPanel.buttons.mouseClick(mX, mY);
             }
@@ -444,6 +453,20 @@
                                            this.successScreen.bgSprite[4]
                 );
                 this.menuButtons.buttonsSuccess.render(ten.settings.ctx);
+            }
+
+            if (this.failed) {
+                ten.settings.ctx.drawImage(this.failureScreen.bgSprite[0],
+                                           this.failureScreen.bgSprite[1],
+                                           this.failureScreen.bgSprite[2],
+                                           this.failureScreen.bgSprite[3],
+                                           this.failureScreen.bgSprite[4],
+                                           this.failureScreen.x,
+                                           this.failureScreen.y,
+                                           this.failureScreen.bgSprite[3],
+                                           this.failureScreen.bgSprite[4]
+                );
+                this.menuButtons.buttonsFailure.render(ten.settings.ctx);
             }
 
 

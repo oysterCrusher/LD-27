@@ -129,6 +129,12 @@ ten.Map = function() {
             ten.State.game.resetQueue();
             ten.State.game.success();
         }
+        // Are we dead?
+        if (this.player.hp <= 0) {
+            ten.State.game.map.isPlaying = false;
+            ten.State.game.resetQueue();
+            ten.State.game.failure();
+        }
         if (this.currentStep < this.endStep) {
             this.player.lastXCell = this.player.xCell;
             this.player.lastYCell = this.player.yCell;

@@ -7,13 +7,17 @@ ten.Player = function(x0, y0, d0) {
     this.lastXCell = x0;
     this.lastYCell = y0;
     this.dir = d0;
-    this.hp = 3;
+    this.hp = 1;
 
     this.spriteUp = [ten.settings.sprites[2], 0, 0, 30, 30];
     this.spriteDown = [ten.settings.sprites[2], 30, 0, 30, 30];
     this.spriteLeft = [ten.settings.sprites[2], 60, 0, 30, 30];
     this.spriteRight = [ten.settings.sprites[2], 90, 0, 30, 30];
     this.sprite = this.spriteUp;
+
+    this.hit = function() {
+        this.hp--;
+    };
 
     this.reset = function(x, y, d) {
         this.x = x;
@@ -23,7 +27,7 @@ ten.Player = function(x0, y0, d0) {
         this.lastXCell = x;
         this.lastYCell = y;
         this.dir = d;
-        this.hp = 3;
+        this.hp = 1;
 
         if (this.dir === 1) {
             this.sprite = this.spriteUp;
@@ -34,7 +38,7 @@ ten.Player = function(x0, y0, d0) {
         } else {
             this.sprite = this.spriteRight;
         }
-    }
+    };
 
 };
 
@@ -54,7 +58,11 @@ ten.Bouncer = function(x0, y0, d0) {
     this.hp = 1;
 
     this.step = function() {
-
+        if (this.hp > 0) {
+            if ((this.xCell === ten.State.game.map.player.xCell) && (this.yCell === ten.State.game.map.player.yCell)) {
+                ten.State.game.map.player.hit();
+            }
+        }
     };
 
     this.hitWithArrow = function() {
@@ -156,6 +164,11 @@ ten.Seeker = function(x0, y0) {
             this.hp--;
             this.takeArrowHit = false;
             this.sprite = this.sprite1;
+        }
+        if (this.hp > 0) {
+            if ((this.xCell === ten.State.game.map.player.xCell) && (this.yCell === ten.State.game.map.player.yCell)) {
+                ten.State.game.map.player.hit();
+            }
         }
     };
 

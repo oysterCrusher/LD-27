@@ -10,9 +10,15 @@
             this.levels = {};
             this.levels.buttons = new SimpleButtons.Buttons();
             for (var i = 0; i < 3; i++) {
+                var completed = 0;
+                if (typeof(Storage) !== "undefined") {
+                    if (localStorage.getItem("ten_" + i.toString()) === "1") {
+                        completed = 1;
+                    }
+                }
                 this.levels.buttons.addButton(40,
                                               90 + 40 * i,
-                                              [ten.settings.sprites[6], 0, 30 * i, 100, 30],
+                                              [ten.settings.sprites[6], 0 + completed * 100, 30 * i, 100, 30],
                                               this.selectLevel(i)
                 );
             }
@@ -37,6 +43,7 @@
         },
 
         enter: function() {
+            this.init();
             ten.settings.canvas.addEventListener("click", this.clickHandler, false);
         },
 
