@@ -152,7 +152,6 @@ ten.Seeker = function(x0, y0) {
     };
 
     this.step = function() {
-        console.log("step", this.hp);
         if (this.takeArrowHit) {
             this.hp--;
             this.takeArrowHit = false;

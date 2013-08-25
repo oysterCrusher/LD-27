@@ -2,14 +2,15 @@
 
     ten.State = {
 
-        menu: ten.menu,
+        menu: ten.menuState,
         game: ten.gameState,
 
         currentState: null,
 
         start: function() {
             this.game.init();
-            this.currentState = this.game;
+            this.menu.init();
+            this.currentState = this.menu;
             this.currentState.enter();
             this.startUpdating();
             this.startRendering();
@@ -27,20 +28,20 @@
         update: function() {
             Gamepad.update(this.currentTime);
             ten.State.currentState.update(this.currentTime);
-        }
+        },
 
-//        returnToMenu: function() {
-//            this.currentState.exit();
-//            this.currentState = this.menu;
-//            this.currentState.enter();
-//        },
-//
-//        startLevel: function(n) {
-//            this.game.loadLevel(n);
-//            this.currentState.exit();
-//            this.currentState = this.game;
-//            this.currentState.enter();
-//        }
+        returnToMenu: function() {
+            this.currentState.exit();
+            this.currentState = this.menu;
+            this.currentState.enter();
+        },
+
+        startLevel: function(n) {
+            this.game.loadLevel(n);
+            this.currentState.exit();
+            this.currentState = this.game;
+            this.currentState.enter();
+        }
 
     }
 

@@ -9,7 +9,7 @@ ten.Map = function() {
     this.queue = [];
     this.endStep = 0;
     this.isPlaying = false;
-    this.stepLength = 1000;
+    this.stepLength = 700;
 //    this.currentStep;
 //    this.currentTime;
     this.nextActionTime = 0;
@@ -28,9 +28,6 @@ ten.Map = function() {
 
         // Spawn the player
         this.player = new ten.Player(2, 14, 1);
-
-        // Sort out the map
-        this.loadMap(2);
 
     };
 
@@ -94,6 +91,7 @@ ten.Map = function() {
         this.player.reset(ten.maps[n].spawnX, ten.maps[n].spawnY, ten.maps[n].spawnD);
 
         // Spawn some enemies
+        this.enemies = [];
         for (var i = 0; i < ten.maps[n].bouncers.length; i++) {
             var enemy = new ten.Bouncer(ten.maps[n].bouncers[i][0], ten.maps[n].bouncers[i][1], ten.maps[n].bouncers[i][2]);
             this.enemies.push(enemy);
@@ -102,14 +100,6 @@ ten.Map = function() {
             enemy = new ten.Seeker(ten.maps[n].seekers[i][0], ten.maps[n].seekers[i][1]);
             this.enemies.push(enemy);
         }
-//        var enemy = new ten.Bouncer(2, 6, 3);
-//        this.enemies.push(enemy);
-//        enemy = new ten.Bouncer(13,10,1);
-//        this.enemies.push(enemy);
-//        enemy = new ten.Bouncer(7,6,3);
-//        this.enemies.push(enemy);
-//        enemy = new ten.Seeker(1, 1);
-//        this.enemies.push(enemy);
     };
 
     this.giveQueue = function(q, t) {
@@ -133,6 +123,12 @@ ten.Map = function() {
             hit,
             arrow;
 
+        // Are we at the end!
+        if (this.tiles[this.player.yCell][this.player.xCell] === 2) {
+            this.isPlaying = false;
+            ten.State.game.resetQueue();
+            ten.State.game.success();
+        }
         if (this.currentStep < this.endStep) {
             this.player.lastXCell = this.player.xCell;
             this.player.lastYCell = this.player.yCell;
@@ -318,9 +314,6 @@ ten.Map = function() {
                 this.arrows.push(arrow);
             }
             this.currentStep++;
-            if (this.tiles[this.player.yCell][this.player.xCell] === 2) {
-                console.log("success");
-            }
         } else {
             this.player.lastXCell = this.player.xCell;
             this.player.lastYCell = this.player.yCell;

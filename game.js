@@ -9,7 +9,10 @@
             actions: [0,0,0,0,0,0,0,0,0,0],
             nextAction: 0
         },
+        currentLevelNo: 0,
         playing: false,
+        complete: false,
+        failed: false,
 
         init: function() {
 
@@ -86,8 +89,8 @@
                 },
                 queueSprites: {
                     walkUp: {
-                    sprite: [ten.settings.sprites[3], 0, 30, 30, 30]
-                },
+                        sprite: [ten.settings.sprites[3], 0, 30, 30, 30]
+                    },
                     walkDown: {
                         sprite: [ten.settings.sprites[3], 30, 30, 30, 30]
                     },
@@ -112,6 +115,37 @@
                 },
                 queueSprite: [ten.settings.sprites[4], 0, 0, 300, 30]
             };
+
+            this.successScreen = {
+                bgSprite: [ten.settings.sprites[3], 0, 60, 300, 100],
+                x: 250,
+                y: 150
+            };
+
+            this.failureScreen = {
+                bgSprite: [ten.settings.sprites[3], 0, 160, 300, 100],
+                x: 250,
+                y: 150
+            };
+
+            this.menuButtons = {
+                next: {
+                    sprite: [ten.settings.sprites[3], 100, 260, 100, 34],
+                    x: 270,
+                    y: 200
+                },
+                menu: {
+                    sprite: [ten.settings.sprites[3], 0, 260, 100, 34],
+                    x: 430,
+                    y: 200
+                },
+                retry: {
+                    sprite: [ten.settings.sprites[3], 200, 260, 100, 34],
+                    x: 270,
+                    y: 200
+                }
+            };
+
 
 //            this.healthBar = {
 //                emptyHeartSprite: [ten.settings.sprites[3], 180, 0, 30, 30],
@@ -176,6 +210,7 @@
                                                 this.commandPanel.buttonSprites.go.sprite,
                                                 this.go()
             );
+
             this.commandPanel.timerOverlay = {
                 x: 400,
                 y: 520,
@@ -201,6 +236,23 @@
             }
         },
 
+        goToNext: function() {
+            return function() {
+                console.log(ten.State.game.currentLevelNo + 1);
+                ten.State.startLevel(ten.State.game.currentLevelNo + 1);
+            }
+        },
+
+        returnToMenu: function() {
+            return function() {
+                ten.State.returnToMenu();
+            }
+        },
+
+        restartLevel: function() {
+
+        },
+
         removeLastFromQueue: function() {
             return function() {
                 if (ten.State.game.queue.nextAction > 0) {
@@ -223,21 +275,64 @@
             this.playing = false;
         },
 
+        success: function() {
+            this.complete = true;
+        },
+
+        loadLevel: function(i) {
+            this.map.loadMap(i);
+            this.currentLevelNo = i;
+        },
+
         clickHandler: function(evt) {
             var mX, mY;
             mX = evt.clientX - evt.target.getBoundingClientRect().left;
             mY = evt.clientY - evt.target.getBoundingClientRect().top;
-            ten.State.game.commandPanel.buttons.mouseClick(mX, mY);
+            if (ten.State.game.complete) {
+                ten.State.game.menuButtons.buttonsSuccess.mouseClick(mX, mY);
+            } else if (!ten.State.game.playing) {
+                ten.State.game.commandPanel.buttons.mouseClick(mX, mY);
+            }
+
         },
 
         enter: function() {
 //            ten.settings.setGameKeyboard();
+            this.playing = false;
+            this.complete = false;
+            this.failed = false;
+
+            this.menuButtons.buttonsSuccess = new SimpleButtons.Buttons();
+            this.menuButtons.buttonsFailure = new SimpleButtons.Buttons();
+            if (this.currentLevelNo < 2) {
+                this.menuButtons.buttonsSuccess.addButton(this.menuButtons.next.x,
+                                                          this.menuButtons.next.y,
+                                                          this.menuButtons.next.sprite,
+                                                          this.goToNext()
+                );
+            }
+            this.menuButtons.buttonsSuccess.addButton(this.menuButtons.menu.x,
+                                                      this.menuButtons.menu.y,
+                                                      this.menuButtons.menu.sprite,
+                                                      this.returnToMenu()
+            );
+            this.menuButtons.buttonsFailure.addButton(this.menuButtons.retry.x,
+                                                      this.menuButtons.retry.y,
+                                                      this.menuButtons.retry.sprite,
+                                                      this.restartLevel()
+            );
+            this.menuButtons.buttonsFailure.addButton(this.menuButtons.menu.x,
+                                                      this.menuButtons.menu.y,
+                                                      this.menuButtons.menu.sprite,
+                                                      this.returnToMenu()
+            );
+
             ten.settings.canvas.addEventListener("click", this.clickHandler, false);
         },
 
-//        exit: function() {
-//
-//        },
+        exit: function() {
+            ten.settings.canvas.removeEventListener("click", this.clickHandler, false);
+        },
 
         render: function() {
             this.map.render();
@@ -336,6 +431,22 @@
                                           this.commandPanel.timerOverlay.w,
                                           this.commandPanel.timerOverlay.h);
             }
+
+            if (this.complete) {
+                ten.settings.ctx.drawImage(this.successScreen.bgSprite[0],
+                                           this.successScreen.bgSprite[1],
+                                           this.successScreen.bgSprite[2],
+                                           this.successScreen.bgSprite[3],
+                                           this.successScreen.bgSprite[4],
+                                           this.successScreen.x,
+                                           this.successScreen.y,
+                                           this.successScreen.bgSprite[3],
+                                           this.successScreen.bgSprite[4]
+                );
+                this.menuButtons.buttonsSuccess.render(ten.settings.ctx);
+            }
+
+
 //            for (i = 0; i < 8; i++) {
 //                if (i <= this.map.player.hp) {
 //                    ten.settings.ctx.drawImage(this.healthBar.fullHeartSprite[0],
