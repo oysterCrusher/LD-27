@@ -2,6 +2,7 @@
 
     ten.State = {
 
+        menu: ten.menu,
         game: ten.gameState,
 
         currentState: null,

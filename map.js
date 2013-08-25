@@ -17,41 +17,21 @@ ten.Map = function() {
     this.enemies = [];
     this.arrows = [];
 
-    this.player = {
-        x: 2,
-        y: 3,
-        h: 30,
-        w: 30,
-        hp: 3,
-        xCell: 2,
-        yCell: 3,
-        lastXCell: 2,
-        lastYCell: 3
-    };
-
     this.init = function() {
+
+        // Set up the sprites
         this.tileSpriteMap = ten.settings.sprites[0];
         this.floorTileSprite = [this.tileSpriteMap, 0, 0, 30, 30];
         this.wallTileSprite = [this.tileSpriteMap, 30, 0, 30, 30];
         this.exitTileSprite = [this.tileSpriteMap, 60, 0, 30, 30];
         this.tileSprites = [this.floorTileSprite, this.wallTileSprite, this.exitTileSprite];
-        this.loadMap(0);
 
-        // Spawn some enemies
-        var enemy = new ten.Bouncer(2, 6, 3);
-        this.enemies.push(enemy);
-        enemy = new ten.Bouncer(13,10,1);
-        this.enemies.push(enemy);
-        enemy = new ten.Bouncer(7,6,3);
-        this.enemies.push(enemy);
-        enemy = new ten.Seeker(1, 1);
-        this.enemies.push(enemy);
+        // Spawn the player
+        this.player = new ten.Player(2, 14, 1);
 
-        this.player.spriteUp = [ten.settings.sprites[2], 0, 0, 30, 30];
-        this.player.spriteDown = [ten.settings.sprites[2], 30, 0, 30, 30];
-        this.player.spriteLeft = [ten.settings.sprites[2], 60, 0, 30, 30];
-        this.player.spriteRight = [ten.settings.sprites[2], 90, 0, 30, 30];
-        this.player.sprite = this.player.spriteUp;
+        // Sort out the map
+        this.loadMap(2);
+
     };
 
     this.render = function() {
@@ -111,6 +91,25 @@ ten.Map = function() {
                 this.tiles[y].push(ten.maps[n].tiles[y][x]);
             }
         }
+        this.player.reset(ten.maps[n].spawnX, ten.maps[n].spawnY, ten.maps[n].spawnD);
+
+        // Spawn some enemies
+        for (var i = 0; i < ten.maps[n].bouncers.length; i++) {
+            var enemy = new ten.Bouncer(ten.maps[n].bouncers[i][0], ten.maps[n].bouncers[i][1], ten.maps[n].bouncers[i][2]);
+            this.enemies.push(enemy);
+        }
+        for (i = 0; i < ten.maps[n].seekers.length; i++) {
+            enemy = new ten.Seeker(ten.maps[n].seekers[i][0], ten.maps[n].seekers[i][1]);
+            this.enemies.push(enemy);
+        }
+//        var enemy = new ten.Bouncer(2, 6, 3);
+//        this.enemies.push(enemy);
+//        enemy = new ten.Bouncer(13,10,1);
+//        this.enemies.push(enemy);
+//        enemy = new ten.Bouncer(7,6,3);
+//        this.enemies.push(enemy);
+//        enemy = new ten.Seeker(1, 1);
+//        this.enemies.push(enemy);
     };
 
     this.giveQueue = function(q, t) {
@@ -334,14 +333,13 @@ ten.Map = function() {
         for (var e = 0; e < this.enemies.length; e++) {
             this.enemies[e].lastXCell = this.enemies[e].xCell;
             this.enemies[e].lastYCell = this.enemies[e].yCell;
+            this.enemies[e].decideNextMove();
+            this.enemies[e].step();
             // Check health
             if (this.enemies[e].hp <= 0) {
                 this.enemies.splice(e,1);
                 e--;
-                continue;
             }
-            this.enemies[e].decideNextMove();
-            this.enemies[e].step();
         }
         this.nextEnemyActionTime += this.stepLength;
     };

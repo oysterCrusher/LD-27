@@ -1,3 +1,44 @@
+ten.Player = function(x0, y0, d0) {
+
+    this.x = x0;
+    this.y = y0;
+    this.xCell = x0;
+    this.yCell = y0;
+    this.lastXCell = x0;
+    this.lastYCell = y0;
+    this.dir = d0;
+    this.hp = 3;
+
+    this.spriteUp = [ten.settings.sprites[2], 0, 0, 30, 30];
+    this.spriteDown = [ten.settings.sprites[2], 30, 0, 30, 30];
+    this.spriteLeft = [ten.settings.sprites[2], 60, 0, 30, 30];
+    this.spriteRight = [ten.settings.sprites[2], 90, 0, 30, 30];
+    this.sprite = this.spriteUp;
+
+    this.reset = function(x, y, d) {
+        this.x = x;
+        this.y = y;
+        this.xCell = x;
+        this.yCell = y;
+        this.lastXCell = x;
+        this.lastYCell = y;
+        this.dir = d;
+        this.hp = 3;
+
+        if (this.dir === 1) {
+            this.sprite = this.spriteUp;
+        } else if (this.dir === 2) {
+            this.sprite = this.spriteDown;
+        } else if (this.dir === 3) {
+            this.sprite = this.spriteLeft;
+        } else {
+            this.sprite = this.spriteRight;
+        }
+    }
+
+};
+
+
 ten.Bouncer = function(x0, y0, d0) {
 
     this.x = x0;
@@ -89,6 +130,7 @@ ten.Bouncer = function(x0, y0, d0) {
 
 };
 
+
 ten.Seeker = function(x0, y0) {
 
     this.x = x0;
@@ -110,6 +152,7 @@ ten.Seeker = function(x0, y0) {
     };
 
     this.step = function() {
+        console.log("step", this.hp);
         if (this.takeArrowHit) {
             this.hp--;
             this.takeArrowHit = false;
@@ -125,7 +168,7 @@ ten.Seeker = function(x0, y0) {
         } else {
             var xDistanceToPlayer = Math.abs(this.xCell - ten.State.game.map.player.xCell);
             var yDistanceToPlayer = Math.abs(this.yCell - ten.State.game.map.player.yCell);
-            if (xDistanceToPlayer + yDistanceToPlayer < 5) {
+            if (xDistanceToPlayer + yDistanceToPlayer < 6) {
                 var xMove = 0;
                 var yMove = 0;
                 if (this.xCell > ten.State.game.map.player.xCell) {

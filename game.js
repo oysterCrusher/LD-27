@@ -113,12 +113,12 @@
                 queueSprite: [ten.settings.sprites[4], 0, 0, 300, 30]
             };
 
-            this.healthBar = {
-                emptyHeartSprite: [ten.settings.sprites[3], 180, 0, 30, 30],
-                fullHeartSprite: [ten.settings.sprites[3], 210, 0, 30, 30],
-                x: 430,
-                y: 480
-            };
+//            this.healthBar = {
+//                emptyHeartSprite: [ten.settings.sprites[3], 180, 0, 30, 30],
+//                fullHeartSprite: [ten.settings.sprites[3], 210, 0, 30, 30],
+//                x: 430,
+//                y: 480
+//            };
 
             this.commandPanel.buttons = new SimpleButtons.Buttons();
             this.commandPanel.buttons.addButton(this.commandPanel.buttonSprites.walkUp.x,
@@ -231,7 +231,7 @@
         },
 
         enter: function() {
-            ten.settings.setGameKeyboard();
+//            ten.settings.setGameKeyboard();
             ten.settings.canvas.addEventListener("click", this.clickHandler, false);
         },
 
@@ -336,31 +336,31 @@
                                           this.commandPanel.timerOverlay.w,
                                           this.commandPanel.timerOverlay.h);
             }
-            for (i = 0; i < 8; i++) {
-                if (i <= this.map.player.hp) {
-                    ten.settings.ctx.drawImage(this.healthBar.fullHeartSprite[0],
-                                               this.healthBar.fullHeartSprite[1],
-                                               this.healthBar.fullHeartSprite[2],
-                                               this.healthBar.fullHeartSprite[3],
-                                               this.healthBar.fullHeartSprite[4],
-                                               this.healthBar.x + i * 30,
-                                               this.healthBar.y,
-                                               this.healthBar.fullHeartSprite[3],
-                                               this.healthBar.fullHeartSprite[4]
-                    )
-                } else {
-                    ten.settings.ctx.drawImage(this.healthBar.emptyHeartSprite[0],
-                                               this.healthBar.emptyHeartSprite[1],
-                                               this.healthBar.emptyHeartSprite[2],
-                                               this.healthBar.emptyHeartSprite[3],
-                                               this.healthBar.emptyHeartSprite[4],
-                                               this.healthBar.x + i * 30,
-                                               this.healthBar.y,
-                                               this.healthBar.emptyHeartSprite[3],
-                                               this.healthBar.emptyHeartSprite[4]
-                    )
-                }
-            }
+//            for (i = 0; i < 8; i++) {
+//                if (i <= this.map.player.hp) {
+//                    ten.settings.ctx.drawImage(this.healthBar.fullHeartSprite[0],
+//                                               this.healthBar.fullHeartSprite[1],
+//                                               this.healthBar.fullHeartSprite[2],
+//                                               this.healthBar.fullHeartSprite[3],
+//                                               this.healthBar.fullHeartSprite[4],
+//                                               this.healthBar.x + i * 30,
+//                                               this.healthBar.y,
+//                                               this.healthBar.fullHeartSprite[3],
+//                                               this.healthBar.fullHeartSprite[4]
+//                    )
+//                } else {
+//                    ten.settings.ctx.drawImage(this.healthBar.emptyHeartSprite[0],
+//                                               this.healthBar.emptyHeartSprite[1],
+//                                               this.healthBar.emptyHeartSprite[2],
+//                                               this.healthBar.emptyHeartSprite[3],
+//                                               this.healthBar.emptyHeartSprite[4],
+//                                               this.healthBar.x + i * 30,
+//                                               this.healthBar.y,
+//                                               this.healthBar.emptyHeartSprite[3],
+//                                               this.healthBar.emptyHeartSprite[4]
+//                    )
+//                }
+//            }
         },
 
         update: function() {
