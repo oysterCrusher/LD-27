@@ -73,10 +73,41 @@
                         x: 255,
                         y: 520
                     },
+                    cancelLastAction: {
+                        sprite: [ten.settings.sprites[3], 270, 0, 30, 30],
+                        x: 360,
+                        y: 520
+                    },
                     go: {
                         sprite: [ten.settings.sprites[5], 0, 0, 50, 50],
                         x: 720,
-                        y: 530
+                        y: 510
+                    }
+                },
+                queueSprites: {
+                    walkUp: {
+                    sprite: [ten.settings.sprites[3], 0, 30, 30, 30]
+                },
+                    walkDown: {
+                        sprite: [ten.settings.sprites[3], 30, 30, 30, 30]
+                    },
+                    walkLeft: {
+                        sprite: [ten.settings.sprites[3], 60, 30, 30, 30]
+                    },
+                    walkRight: {
+                        sprite: [ten.settings.sprites[3], 90, 30, 30, 30]
+                    },
+                    shootUp: {
+                        sprite: [ten.settings.sprites[3], 120, 30, 30, 30]
+                    },
+                    shootDown: {
+                        sprite: [ten.settings.sprites[3], 150, 30, 30, 30]
+                    },
+                    shootLeft: {
+                        sprite: [ten.settings.sprites[3], 180, 30, 30, 30]
+                    },
+                    shootRight: {
+                        sprite: [ten.settings.sprites[3], 210, 30, 30, 30]
                     }
                 },
                 queueSprite: [ten.settings.sprites[4], 0, 0, 300, 30]
@@ -86,7 +117,7 @@
                 emptyHeartSprite: [ten.settings.sprites[3], 180, 0, 30, 30],
                 fullHeartSprite: [ten.settings.sprites[3], 210, 0, 30, 30],
                 x: 430,
-                y: 490
+                y: 480
             };
 
             this.commandPanel.buttons = new SimpleButtons.Buttons();
@@ -135,6 +166,11 @@
                                                 this.commandPanel.buttonSprites.rest.sprite,
                                                 this.buttonPress(9)
             );
+            this.commandPanel.buttons.addButton(this.commandPanel.buttonSprites.cancelLastAction.x,
+                                                this.commandPanel.buttonSprites.cancelLastAction.y,
+                                                this.commandPanel.buttonSprites.cancelLastAction.sprite,
+                                                this.removeLastFromQueue()
+            );
             this.commandPanel.buttons.addButton(this.commandPanel.buttonSprites.go.x,
                                                 this.commandPanel.buttonSprites.go.y,
                                                 this.commandPanel.buttonSprites.go.sprite,
@@ -142,7 +178,7 @@
             );
             this.commandPanel.timerOverlay = {
                 x: 400,
-                y: 540,
+                y: 520,
                 w: 0,
                 h: 30,
                 alpha: 0.2,
@@ -162,6 +198,15 @@
                 ten.State.game.playing = true;
                 ten.State.game.map.giveQueue(ten.State.game.queue.actions,
                                              ten.State.game.queue.nextAction);
+            }
+        },
+
+        removeLastFromQueue: function() {
+            return function() {
+                if (ten.State.game.queue.nextAction > 0) {
+                    ten.State.game.queue.actions[ten.State.game.queue.nextAction-1] = 0;
+                    ten.State.game.queue.nextAction--;
+                }
             }
         },
 
@@ -233,41 +278,41 @@
                                        this.commandPanel.queueSprite[3],
                                        this.commandPanel.queueSprite[4],
                                        400,
-                                       540,
+                                       520,
                                        300,
                                        30
             );
             for (var i = 0; i < this.queue.nextAction; i++) {
                 var xPos = 400 + i * 30;
-                var yPos = 540;
+                var yPos = 520;
                 var sprite = null;
                 switch (this.queue.actions[i]) {
                     case 0:
                         sprite = null;
                         break;
                     case 1:
-                        sprite = this.commandPanel.buttonSprites.walkUp.sprite;
+                        sprite = this.commandPanel.queueSprites.walkUp.sprite;
                         break;
                     case 2:
-                        sprite = this.commandPanel.buttonSprites.walkDown.sprite;
+                        sprite = this.commandPanel.queueSprites.walkDown.sprite;
                         break;
                     case 3:
-                        sprite = this.commandPanel.buttonSprites.walkLeft.sprite;
+                        sprite = this.commandPanel.queueSprites.walkLeft.sprite;
                         break;
                     case 4:
-                        sprite = this.commandPanel.buttonSprites.walkRight.sprite;
+                        sprite = this.commandPanel.queueSprites.walkRight.sprite;
                         break;
                     case 5:
-                        sprite = this.commandPanel.buttonSprites.shootUp.sprite;
+                        sprite = this.commandPanel.queueSprites.shootUp.sprite;
                         break;
                     case 6:
-                        sprite = this.commandPanel.buttonSprites.shootDown.sprite;
+                        sprite = this.commandPanel.queueSprites.shootDown.sprite;
                         break;
                     case 7:
-                        sprite = this.commandPanel.buttonSprites.shootLeft.sprite;
+                        sprite = this.commandPanel.queueSprites.shootLeft.sprite;
                         break;
                     case 8:
-                        sprite = this.commandPanel.buttonSprites.shootRight.sprite;
+                        sprite = this.commandPanel.queueSprites.shootRight.sprite;
                         break;
                     case 9:
                         sprite = this.commandPanel.buttonSprites.rest.sprite;
