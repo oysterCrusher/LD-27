@@ -1,34 +1,102 @@
-ten.Enemy = function(x0, y0, d0) {
+ten.Bouncer = function(x0, y0, d0) {
 
-    var x = x0,
-        y = y0,
-        h = 30,
-        w = 30,
-        sprite = [ten.settings.sprites[2], 0, 30, 30, 30],
-        xCell = x0,
-        yCell = y0,
-        lastXCell = x0,
-        lastYCell = y0,
-        dir = d0,
-        hp = 1;
+    this.x = x0;
+        this.y = y0;
+        this.h = 30;
+        this.w = 30;
+        this.sprite = [ten.settings.sprites[2], 0, 30, 30, 30];
+        this.xCell = x0;
+        this.yCell = y0;
+        this.lastXCell = x0;
+        this.lastYCell = y0;
+        this.dir = d0;
+        this.hp = 1;
 
-    function hitWithArrow() {
+    this.hitWithArrow = function() {
         this.hp--;
-    }
+    };
 
-    return {
-        sprite: sprite,
-        x: x,
-        y:y,
-        xCell: xCell,
-        yCell: yCell,
-        lastXCell: lastXCell,
-        lastYCell: lastYCell,
-        h: h,
-        w: w,
-        dir: dir,
-        hp: hp,
-        hitWithArrow: hitWithArrow
+    this.decideNextMove = function() {
+        if (this.dir === 0) { // Stationary
+            // Nothing to do here
+        } else if (this.dir === 1) { // Moving up
+            if (ten.State.game.map.tiles[this.yCell - 1][this.xCell] !== 1) {
+                this.yCell--; // Carry on up
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell + 1] !== 1) {
+                this.xCell++;
+                this.dir = 4; // Go right
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell - 1] !== 1) {
+                this.xCell--;
+                this.dir = 3; // Go left
+            } else if (ten.State.game.map.tiles[this.yCell + 1][this.xCell] !== 1) {
+                this.yCell++;
+                this.dir = 2; // Go down
+            } else {
+                this.dir = 0; // Guess we're stuck here!
+            }
+        } else if (this.dir === 2) { // Moving down
+            if (ten.State.game.map.tiles[this.yCell + 1][this.xCell] !== 1) {
+                this.yCell++; // Carry on down
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell - 1] !== 1) {
+                this.xCell--;
+                this.dir = 3; // Go left
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell + 1] !== 1) {
+                this.xCell++;
+                this.dir = 4; // Go right
+            } else if (ten.State.game.map.tiles[this.yCell - 1][this.xCell] !== 1) {
+                this.yCell--;
+                this.dir = 1; // Go up
+            } else {
+                this.dir = 0; // Guess we're stuck here!
+            }
+        } else if (this.dir === 3) { // Moving left
+            if (ten.State.game.map.tiles[this.yCell][this.xCell - 1] !== 1) {
+                this.xCell--; // Carry on left
+            } else if (ten.State.game.map.tiles[this.yCell - 1][this.xCell] !== 1) {
+                this.yCell--;
+                this.dir = 1; // Go up
+            } else if (ten.State.game.map.tiles[this.yCell + 1][this.xCell] !== 1) {
+                this.yCell++;
+                this.dir = 2; // Go down
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell + 1] !== 1) {
+                this.xCell++;
+                this.dir = 4; // Go right
+            } else {
+                this.dir = 0; // Guess we're stuck here!
+            }
+        } else if (this.dir === 4) { // Moving right
+            if (ten.State.game.map.tiles[this.yCell][this.xCell + 1] !== 1) {
+                this.xCell++; // Carry on right
+            } else if (ten.State.game.map.tiles[this.yCell + 1][this.xCell] !== 1) {
+                this.yCell++;
+                this.dir = 2; // Go down
+            } else if (ten.State.game.map.tiles[this.yCell - 1][this.xCell] !== 1) {
+                this.yCell--;
+                this.dir = 1; // Go up
+            } else if (ten.State.game.map.tiles[this.yCell][this.xCell - 1] !== 1) {
+                this.xCell--;
+                this.dir = 3; // Go left
+            } else {
+                this.dir = 0; /// Guess we're stuck here!
+            }
+        }
+    };
+
+};
+
+ten.Seeker = function(x0, y0) {
+
+    this.x = x0;
+    this.y = y0;
+    this.lastXCell = x0;
+    this.lastYCell = y0;
+    this.xCell = x0;
+    this.yCell = y0;
+    this.sprite = [ten.settings.sprites[2], 0, 90, 30 , 30];
+    this.hp = 2;
+
+    this.hitWithArrow = function() {
+        this.hp--;
     }
 
 };
@@ -42,7 +110,6 @@ ten.Arrow = function(x, y, xTarget, yTarget, dir, t) {
     this.y0 = y;
     this.xTarget = xTarget;
     this.yTarget = yTarget;
-    console.log(this.yTarget);
     this.impactTime = t;
     this.dir = dir;
 

@@ -24,8 +24,8 @@
         },
 
         update: function() {
-            Gamepad.update();
-            ten.State.currentState.update();
+            Gamepad.update(this.currentTime);
+            ten.State.currentState.update(this.currentTime);
         }
 
 //        returnToMenu: function() {

@@ -2,7 +2,7 @@
 
     ten.gameState = {
 
-        map: ten.map(),
+        map: new ten.Map(),
         commandPanel: {},
         healthBar: {},
         queue: {
@@ -319,7 +319,7 @@
         },
 
         update: function() {
-            this.map.update();
+            this.map.update(this.currentTime);
         }
 
     }
