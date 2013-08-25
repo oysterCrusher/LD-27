@@ -1,16 +1,16 @@
 ten.Bouncer = function(x0, y0, d0) {
 
     this.x = x0;
-        this.y = y0;
-        this.h = 30;
-        this.w = 30;
-        this.sprite = [ten.settings.sprites[2], 0, 30, 30, 30];
-        this.xCell = x0;
-        this.yCell = y0;
-        this.lastXCell = x0;
-        this.lastYCell = y0;
-        this.dir = d0;
-        this.hp = 1;
+    this.y = y0;
+    this.h = 30;
+    this.w = 30;
+    this.sprite = [ten.settings.sprites[2], 0, 30, 30, 30];
+    this.xCell = x0;
+    this.yCell = y0;
+    this.lastXCell = x0;
+    this.lastYCell = y0;
+    this.dir = d0;
+    this.hp = 1;
 
     this.hitWithArrow = function() {
         this.hp--;
@@ -94,10 +94,61 @@ ten.Seeker = function(x0, y0) {
     this.yCell = y0;
     this.sprite = [ten.settings.sprites[2], 0, 90, 30 , 30];
     this.hp = 2;
+    this.timeBetweenMoves = 1;
+    this.moveCooldown = 0;
 
     this.hitWithArrow = function() {
         this.hp--;
-    }
+    };
+
+    this.decideNextMove = function() {
+        if (this.moveCooldown > 0) {
+            this.lastXCell = this.xCell;
+            this.lastYCell = this.yCell;
+            this.moveCooldown--;
+        } else {
+            var xDistanceToPlayer = Math.abs(this.xCell - ten.State.game.map.player.xCell);
+            var yDistanceToPlayer = Math.abs(this.yCell - ten.State.game.map.player.yCell);
+            if (xDistanceToPlayer + yDistanceToPlayer < 5) {
+                var xMove = 0;
+                var yMove = 0;
+                if (this.xCell > ten.State.game.map.player.xCell) {
+                    xMove = -1;
+                } else if (this.xCell < ten.State.game.map.player.xCell) {
+                    xMove = 1;
+                } else {
+                    xMove = 0;
+                }
+                if (this.yCell > ten.State.game.map.player.yCell) {
+                    yMove = -1;
+                } else if (this.yCell < ten.State.game.map.player.yCell) {
+                    yMove = 1;
+                } else {
+                    yMove = 0;
+                }
+                if (xDistanceToPlayer > yDistanceToPlayer) {
+                    if (ten.State.game.map.tiles[this.yCell][this.xCell + xMove] !== 1) {
+                        this.xCell += xMove;
+                    } else if ((yDistanceToPlayer > 0) && (ten.State.game.map.tiles[this.yCell + yMove][this.xCell] !== 1)) {
+                        this.yCell += yMove;
+                    }
+                } else if (yDistanceToPlayer > xDistanceToPlayer) {
+                    if (ten.State.game.map.tiles[this.yCell + yMove][this.xCell] !== 1) {
+                        this.yCell += yMove;
+                    } else if ((xDistanceToPlayer > 0) && (ten.State.game.map.tiles[this.yCell][this.xCell + xMove] !== 1)) {
+                        this.xCell += xMove;
+                    }
+                } else if (xDistanceToPlayer === yDistanceToPlayer && xDistanceToPlayer !== 0) {
+                    if ((Math.random() > 0.5) && (ten.State.game.map.tiles[this.yCell][this.xCell + xMove] !== 1)) {
+                        this.xCell += xMove;
+                    } else if (ten.State.game.map.tiles[this.yCell + yMove][this.xCell] !== 1) {
+                        this.yCell += yMove;
+                    }
+                }
+                this.moveCooldown = this.timeBetweenMoves;
+            }
+        }
+    };
 
 };
 

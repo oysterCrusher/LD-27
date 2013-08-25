@@ -36,12 +36,17 @@ ten.Map = function() {
         this.exitTileSprite = [this.tileSpriteMap, 60, 0, 30, 30];
         this.tileSprites = [this.floorTileSprite, this.wallTileSprite, this.exitTileSprite];
         this.loadMap(0);
+
+        // Spawn some enemies
         var enemy = new ten.Bouncer(2, 6, 3);
         this.enemies.push(enemy);
         enemy = new ten.Bouncer(13,10,1);
         this.enemies.push(enemy);
         enemy = new ten.Bouncer(7,6,3);
         this.enemies.push(enemy);
+        enemy = new ten.Seeker(1, 1);
+        this.enemies.push(enemy);
+
         this.player.spriteUp = [ten.settings.sprites[2], 0, 0, 30, 30];
         this.player.spriteDown = [ten.settings.sprites[2], 30, 0, 30, 30];
         this.player.spriteLeft = [ten.settings.sprites[2], 60, 0, 30, 30];
