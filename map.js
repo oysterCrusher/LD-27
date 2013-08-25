@@ -43,7 +43,11 @@ ten.map = function() {
         enemies.push(enemy);
         enemy = new ten.Enemy(7,6,3);
         enemies.push(enemy);
-        player.sprite = [ten.settings.sprites[2], 0, 0, 30, 30];
+        player.spriteUp = [ten.settings.sprites[2], 0, 0, 30, 30];
+        player.spriteDown = [ten.settings.sprites[2], 30, 0, 30, 30];
+        player.spriteLeft = [ten.settings.sprites[2], 60, 0, 30, 30];
+        player.spriteRight = [ten.settings.sprites[2], 90, 0, 30, 30];
+        player.sprite = player.spriteUp;
     }
 
     function render() {
@@ -128,6 +132,7 @@ ten.map = function() {
             player.lastXCell = player.xCell;
             player.lastYCell = player.yCell;
             if (queue[currentStep] === 1) { // Try to move up
+                player.sprite = player.spriteUp;
                 if (tiles[player.yCell-1][player.xCell] !== 1) {
                     player.yCell--;
                     for (e = 0; e < enemies.length; e++) {
@@ -140,6 +145,7 @@ ten.map = function() {
                 }
             }
             if (queue[currentStep] === 2) { // Try to move down
+                player.sprite = player.spriteDown;
                 if (tiles[player.yCell+1][player.xCell] !== 1) {
                     player.yCell++;
                     for (e = 0; e < enemies.length; e++) {
@@ -152,6 +158,7 @@ ten.map = function() {
                 }
             }
             if (queue[currentStep] === 3) { // Try to move left
+                player.sprite = player.spriteLeft;
                 if (tiles[player.yCell][player.xCell-1] !== 1) {
                     player.xCell--;
                     for (e = 0; e < enemies.length; e++) {
@@ -164,6 +171,7 @@ ten.map = function() {
                 }
             }
             if (queue[currentStep] === 4) { // Try to move right
+                player.sprite = player.spriteRight;
                 if (tiles[player.yCell][player.xCell+1] !== 1) {
                     player.xCell++;
                     for (e = 0; e < enemies.length; e++) {
@@ -177,6 +185,7 @@ ten.map = function() {
             }
             hit = false;
             if (queue[currentStep] === 5) { // Shoot up
+                player.sprite = player.spriteUp;
                 for (i = player.yCell - 1; i >= 0; i--) {
                     // Hit a wall?
                     if (tiles[i][player.xCell] === 1) {
@@ -208,6 +217,7 @@ ten.map = function() {
                 arrows.push(arrow);
             }
             if (queue[currentStep] === 6) { // Shoot down
+                player.sprite = player.spriteDown;
                 for (i = player.yCell + 1; i < 16; i++) {
                     // Hit a wall?
                     if (tiles[i][player.xCell] === 1) {
@@ -239,6 +249,7 @@ ten.map = function() {
                 arrows.push(arrow);
             }
             if (queue[currentStep] === 7) { // Shoot left
+                player.sprite = player.spriteLeft;
                 for (i = player.xCell - 1; i >= 0; i--) {
                     // Hit a wall?
                     if (tiles[player.yCell][i] === 1) {
@@ -270,6 +281,7 @@ ten.map = function() {
                 arrows.push(arrow);
             }
             if (queue[currentStep] === 8) { // Shoot right
+                player.sprite = player.spriteRight;
                 for (i = player.xCell + 1; i < 26; i++) {
                     // Hit a wall?
                     if (tiles[player.yCell][i] === 1) {
