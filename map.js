@@ -36,9 +36,11 @@ ten.map = function() {
         exitTileSprite = [tileSpriteMap, 60, 0, 30, 30];
         tileSprites = [floorTileSprite, wallTileSprite, exitTileSprite];
         loadMap(0);
-        var enemy = new ten.Enemy(2, 11);
+        var enemy = new ten.Enemy(2, 11, 3);
         enemies.push(enemy);
-        enemy = new ten.Enemy(13,10);
+        enemy = new ten.Enemy(13,10,1);
+        enemies.push(enemy);
+        enemy = new ten.Enemy(7,6,3);
         enemies.push(enemy);
         player.sprite = [ten.settings.sprites[2], 0, 0, 30, 30];
     }
@@ -73,7 +75,6 @@ ten.map = function() {
                                    ten.settings.tileSize
         );
     }
-
 
     function drawObject(obj) {
         ten.settings.ctx.drawImage(obj.sprite[0],
@@ -182,10 +183,67 @@ ten.map = function() {
         for (var e = 0; e < enemies.length; e++) {
             enemies[e].lastXCell = enemies[e].xCell;
             enemies[e].lastYCell = enemies[e].yCell;
-            var rand = Math.random();
-            if (rand < 0.0) {
-                if (tiles[enemies[e].yCell-1][enemies[e].xCell] !== 1) {
+            if (enemies[e].dir === 0) { // Stationary
+                // Nothing to do here
+            } else if (enemies[e].dir === 1) { // Moving up
+                if (tiles[enemies[e].yCell - 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell--; // Carry on up
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell + 1] !== 1) {
+                    enemies[e].xCell++;
+                    enemies[e].dir = 4; // Go right
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell - 1] !== 1) {
+                    enemies[e].xCell--;
+                    enemies[e].dir = 3; // Go left
+                } else if (tiles[enemies[e].yCell + 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell++;
+                    enemies[e].dir = 2; // Go down
+                } else {
+                    enemies[e].dir = 0; // Guess we're stuck here!
+                }
+            } else if (enemies[e].dir === 2) { // Moving down
+                if (tiles[enemies[e].yCell + 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell++; // Carry on down
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell - 1] !== 1) {
+                    enemies[e].xCell--;
+                    enemies[e].dir = 3; // Go left
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell + 1] !== 1) {
+                    enemies[e].xCell++;
+                    enemies[e].dir = 4; // Go right
+                } else if (tiles[enemies[e].yCell - 1][enemies[e].xCell] !== 1) {
                     enemies[e].yCell--;
+                    enemies[e].dir = 1; // Go up
+                } else {
+                    enemies[e].dir = 0; // Guess we're stuck here!
+                }
+            } else if (enemies[e].dir === 3) { // Moving left
+                if (tiles[enemies[e].yCell][enemies[e].xCell - 1] !== 1) {
+                    enemies[e].xCell--; // Carry on left
+                } else if (tiles[enemies[e].yCell - 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell--;
+                    enemies[e].dir = 1; // Go up
+                } else if (tiles[enemies[e].yCell + 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell++;
+                    enemies[e].dir = 2; // Go down
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell + 1] !== 1) {
+                    enemies[e].xCell++;
+                    enemies[e].dir = 4; // Go right
+                } else {
+                    enemies[e].dir = 0; // Guess we're stuck here!
+                }
+            } else if (enemies[e].dir === 4) { // Moving right
+                if (tiles[enemies[e].yCell][enemies[e].xCell + 1] !== 1) {
+                    enemies[e].xCell++; // Carry on right
+                } else if (tiles[enemies[e].yCell + 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell++;
+                    enemies[e].dir = 2; // Go down
+                } else if (tiles[enemies[e].yCell - 1][enemies[e].xCell] !== 1) {
+                    enemies[e].yCell--;
+                    enemies[e].dir = 1; // Go up
+                } else if (tiles[enemies[e].yCell][enemies[e].xCell - 1] !== 1) {
+                    enemies[e].xCell--;
+                    enemies[e].dir = 3; // Go left
+                } else {
+                    enemies[e].dir = 0; /// Guess we're stuck here!
                 }
             }
         }

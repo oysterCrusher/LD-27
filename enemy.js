@@ -1,4 +1,4 @@
-ten.Enemy = function(x0, y0) {
+ten.Enemy = function(x0, y0, d0) {
 
     var x = x0,
         y = y0,
@@ -8,7 +8,8 @@ ten.Enemy = function(x0, y0) {
         xCell = x0,
         yCell = y0,
         lastXCell = x0,
-        lastYCell = y0;
+        lastYCell = y0,
+        dir = d0;
 
     return {
         sprite: sprite,
@@ -19,7 +20,8 @@ ten.Enemy = function(x0, y0) {
         lastXCell: lastXCell,
         lastYCell: lastYCell,
         h: h,
-        w: w
+        w: w,
+        dir: dir
     }
 
 };

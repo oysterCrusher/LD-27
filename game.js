@@ -68,6 +68,11 @@
                         x: 215,
                         y: 520
                     },
+                    rest: {
+                        sprite: [ten.settings.sprites[3], 240, 0, 30, 30],
+                        x: 255,
+                        y: 520
+                    },
                     go: {
                         sprite: [ten.settings.sprites[5], 0, 0, 50, 50],
                         x: 720,
@@ -124,6 +129,11 @@
                                                 this.commandPanel.buttonSprites.shootRight.y,
                                                 this.commandPanel.buttonSprites.shootRight.sprite,
                                                 this.buttonPress(8)
+            );
+            this.commandPanel.buttons.addButton(this.commandPanel.buttonSprites.rest.x,
+                                                this.commandPanel.buttonSprites.rest.y,
+                                                this.commandPanel.buttonSprites.rest.sprite,
+                                                this.buttonPress(9)
             );
             this.commandPanel.buttons.addButton(this.commandPanel.buttonSprites.go.x,
                                                 this.commandPanel.buttonSprites.go.y,
@@ -259,7 +269,9 @@
                     case 8:
                         sprite = this.commandPanel.buttonSprites.shootRight.sprite;
                         break;
-
+                    case 9:
+                        sprite = this.commandPanel.buttonSprites.rest.sprite;
+                        break;
                 }
                 ten.settings.ctx.drawImage(sprite[0],
                                            sprite[1],
