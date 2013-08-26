@@ -229,9 +229,11 @@
 
         go: function() {
             return function() {
-                ten.State.game.playing = true;
-                ten.State.game.map.giveQueue(ten.State.game.queue.actions,
-                                             ten.State.game.queue.nextAction);
+                if (ten.State.game.queue.nextAction === 10) {
+                    ten.State.game.playing = true;
+                    ten.State.game.map.giveQueue(ten.State.game.queue.actions,
+                                                 ten.State.game.queue.nextAction);
+                }
             }
         },
 
@@ -313,7 +315,7 @@
 
             this.menuButtons.buttonsSuccess = new SimpleButtons.Buttons();
             this.menuButtons.buttonsFailure = new SimpleButtons.Buttons();
-            if (this.currentLevelNo < 2) {
+            if (this.currentLevelNo < 4) {
                 this.menuButtons.buttonsSuccess.addButton(this.menuButtons.next.x,
                                                           this.menuButtons.next.y,
                                                           this.menuButtons.next.sprite,

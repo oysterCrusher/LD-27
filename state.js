@@ -2,15 +2,17 @@
 
     ten.State = {
 
+        intro: ten.introState,
         menu: ten.menuState,
         game: ten.gameState,
 
         currentState: null,
 
         start: function() {
+            this.intro.init();
             this.game.init();
             this.menu.init();
-            this.currentState = this.menu;
+            this.currentState = this.intro;
             this.currentState.enter();
             this.startUpdating();
             this.startRendering();
@@ -40,6 +42,12 @@
             this.game.loadLevel(n);
             this.currentState.exit();
             this.currentState = this.game;
+            this.currentState.enter();
+        },
+
+        showIntro: function() {
+            this.currentState.exit();
+            this.currentState = this.intro;
             this.currentState.enter();
         }
 

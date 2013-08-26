@@ -9,7 +9,7 @@
             this.bgSprite = [ten.settings.sprites[7], 0, 0, 800, 600];
             this.levels = {};
             this.levels.buttons = new SimpleButtons.Buttons();
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < 5; i++) {
                 var completed = 0;
                 if (typeof(Storage) !== "undefined") {
                     if (localStorage.getItem("ten_" + i.toString()) === "1") {
@@ -28,6 +28,13 @@
                                           this.startLevel()
             );
             this.snapshots = [ten.settings.sprites[10], 0, 0, 375, 210];
+            this.levels.buttons.addButton(30, 530, [ten.settings.sprites[6], 0, 270, 100, 30], this.showHelp());
+        },
+
+        showHelp: function() {
+            return function() {
+                ten.State.showIntro();
+            }
         },
 
         selectLevel: function(i) {
@@ -107,4 +114,5 @@
         }
 
     }
+
 }());

@@ -17,7 +17,7 @@ var ten = ten || {};
 
         // Sprite settings
         tileSize: 30,
-        nToLoad: 11,
+        nToLoad: 12,
         sprites: [],
         toLoad: [
             "assets/tileset.png",
@@ -30,7 +30,8 @@ var ten = ten || {};
             "assets/menu_bg.png",
             "assets/menu_selection.png",
             "assets/menu_go.png",
-            "assets/menu_snapshots.png"
+            "assets/menu_snapshots.png",
+            "assets/info.png"
         ],
 
 //        // Set keyboard controls in gamepad.js
